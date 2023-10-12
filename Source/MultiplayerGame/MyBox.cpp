@@ -18,7 +18,7 @@ AMyBox::AMyBox()
 void AMyBox::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SetReplicateMovement(true);
 }
 
 // Called every frame
@@ -34,3 +34,17 @@ void AMyBox::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePr
 	DOREPLIFETIME(AMyBox, replicatedVar);
 }
 
+void AMyBox::OnRep_ReplicatedVar()
+{
+	if (HasAuthority()) 
+	{
+		FVector newLocation = GetActorLocation() + FVector(0.0f, 0.0f, 200.0f);
+		SetActorLocation(newLocation);
+
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("Server: OnRep_ReplicatedVar"));
+	}
+	else 
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, FString::Printf(TEXT("Client %d: OnRep_ReplicatedVar"), GPlayInEditorID));
+	}
+}
