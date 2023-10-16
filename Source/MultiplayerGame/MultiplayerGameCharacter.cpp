@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Net/UnrealNetwork.h"
+#include "Engine/StaticMeshActor.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -129,6 +130,33 @@ void AMultiplayerGameCharacter::ServerRPCFunction_Implementation()
 {
 	if (HasAuthority())
 	{
+#if 0
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, TEXT("ServerRPC Function Implementation"));
+#endif
+		if (!SphereMesh)
+		{
+			return;
+		}
+
+		AStaticMeshActor *StaticMeshActor = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass());
+		if (StaticMeshActor) 
+		{
+			StaticMeshActor->SetReplicates(true);
+			StaticMeshActor->SetReplicateMovement(true);
+			StaticMeshActor->SetMobility(EComponentMobility::Movable);
+			FVector SpawnLocation = GetActorLocation() + GetActorRotation().Vector() * 100.0f + GetActorUpVector() * 50.0f;
+			StaticMeshActor->SetActorLocation(SpawnLocation);
+			UStaticMeshComponent* StaticMeshComponent = StaticMeshActor->GetStaticMeshComponent();
+
+			if (StaticMeshComponent) 
+			{
+				StaticMeshComponent->SetIsReplicated(true);
+				StaticMeshComponent->SetSimulatePhysics(true);
+				if (SphereMesh) 
+				{
+					StaticMeshComponent->SetStaticMesh(SphereMesh);
+				}
+			}
+		}
 	}
 }
