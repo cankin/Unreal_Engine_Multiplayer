@@ -19,6 +19,11 @@ void AMyBox::BeginPlay()
 {
 	Super::BeginPlay();
 	SetReplicateMovement(true);
+
+	if (HasAuthority())
+	{
+		GetWorld()->GetTimerManager().SetTimer(TestTimer, this, &AMyBox::DecreaseReplicatedVar, 2.0f, false);
+	}
 }
 
 // Called every frame
@@ -46,5 +51,18 @@ void AMyBox::OnRep_ReplicatedVar()
 	else 
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, FString::Printf(TEXT("Client %d: OnRep_ReplicatedVar"), GPlayInEditorID));
+	}
+}
+
+void AMyBox::DecreaseReplicatedVar()
+{
+	if(HasAuthority())
+	{
+		replicatedVar -= 1.0f;
+		OnRep_ReplicatedVar();
+		if (replicatedVar > 0)
+		{
+			GetWorld()->GetTimerManager().SetTimer(TestTimer, this, &AMyBox::DecreaseReplicatedVar, 2.0f, false);
+		}
 	}
 }
