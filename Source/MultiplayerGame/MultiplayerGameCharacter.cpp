@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Net/UnrealNetwork.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -124,6 +125,10 @@ void AMultiplayerGameCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
-
-
-
+void AMultiplayerGameCharacter::ServerRPCFunction_Implementation()
+{
+	if (HasAuthority())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, TEXT("ServerRPC Function Implementation"));
+	}
+}
