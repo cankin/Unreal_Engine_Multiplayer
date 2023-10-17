@@ -140,7 +140,11 @@ void AMultiplayerGameCharacter::ServerRPCFunction_Implementation(int num)
 			return;
 		}
 
-		AStaticMeshActor *StaticMeshActor = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass());
+		FActorSpawnParameters SpawnParameters;
+		SpawnParameters.Owner = this;
+
+		AStaticMeshActor *StaticMeshActor = GetWorld()->SpawnActor<AStaticMeshActor>(SpawnParameters);
+		//to change the owner of the static mesh after creation, do: StaticMeshActor->SetOwner();
 		if (StaticMeshActor) 
 		{
 			StaticMeshActor->SetReplicates(true);
