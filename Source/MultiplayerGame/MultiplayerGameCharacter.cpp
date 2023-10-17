@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Net/UnrealNetwork.h"
 #include "Engine/StaticMeshActor.h"
+#include "Kismet/GameplayStatics.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -175,4 +176,13 @@ bool AMultiplayerGameCharacter::ServerRPCFunction_Validate(int num)
 	}
 
 	return false;
+}
+
+void AMultiplayerGameCharacter::ClientRPCFunction_Implementation()
+{
+	if(ParticleEffect)
+	{
+		FVector SpawnLocation = GetActorLocation();
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleEffect, SpawnLocation, FRotator::ZeroRotator, true, EPSCPoolMethod::AutoRelease);
+	}
 }

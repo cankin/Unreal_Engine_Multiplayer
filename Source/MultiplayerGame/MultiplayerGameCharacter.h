@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Particles/ParticleSystem.h"
 #include "MultiplayerGameCharacter.generated.h"
 
 
@@ -68,5 +69,11 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	UStaticMesh* SphereMesh;
+
+	UFUNCTION(Client, Reliable, BlueprintCallable)
+	void ClientRPCFunction();
+
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* ParticleEffect;
 };
 
