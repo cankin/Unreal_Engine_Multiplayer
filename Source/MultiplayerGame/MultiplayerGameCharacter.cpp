@@ -126,13 +126,15 @@ void AMultiplayerGameCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
-void AMultiplayerGameCharacter::ServerRPCFunction_Implementation()
+void AMultiplayerGameCharacter::ServerRPCFunction_Implementation(int num)
 {
 	if (HasAuthority())
 	{
 #if 0
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, TEXT("ServerRPC Function Implementation"));
 #endif
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, FString::Printf(TEXT("MyArg: %d"), num));
+
 		if (!SphereMesh)
 		{
 			return;
@@ -159,4 +161,14 @@ void AMultiplayerGameCharacter::ServerRPCFunction_Implementation()
 			}
 		}
 	}
+}
+
+bool AMultiplayerGameCharacter::ServerRPCFunction_Validate(int num)
+{
+	if (num >= 0 && num <= 100)
+	{
+		return true;
+	}
+
+	return false;
 }
